@@ -135,3 +135,4 @@ for j in range( len( edgesFinal ) ):
         layerTwoLinks.append( edge )
 
 print( len( layerTwoLinks), len( layerOneLinks), len( edgesFinal) )
+
