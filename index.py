@@ -8,9 +8,9 @@ import time
 datanode = pd.read_csv('data/node.csv')
 datalink = pd.read_csv('data/links.csv')
 
-print( "\n\n  datanode.head()  --:: \n", datanode.head(), "\n\n" )
-print(  "\n\n  datalink.head()  --:: \n", datalink.head() , "\n\n")
-
+print( "\n  datanode.head()  --:: \n", datanode.head(), "\n" )
+time.sleep(2)
+print(  "\n  datalink.head()  --:: \n", datalink.head() , "\n")
 time.sleep(2)
 
 
@@ -90,15 +90,15 @@ def main(nodes, edgesSource, edgesTarget, ColoursForNodes, LogicsForNodes):
 layerOneNode, layerTwoNode, layerOneColors, layerTwoColors, IDcolors, edgesFinal = main( Anode, AlinkSorc, AlinkTar, Acolornode, Alogicnode )
 
 
-print("\n  layerOneNodes -->> ", len(layerOneNode), "\n",  "\n  layerTwoNodes -->> ", len(layerTwoNode), "\n",
-      "\n  layerOneColors -->> ", len(layerOneColors), "\n","\n  layerTwoColors -->> ", len(layerTwoColors), "\n",
-      "\n  IDcolors   &&  edges Final -->> ", len(IDcolors),len(edgesFinal), "\n",
-      " \n  type(layerOneNode[10] && layerTwoNode[10]) && layerOneColors[10]) -->> ", type(layerOneNode[10]), type(layerTwoNode[10]),type(layerOneColors[10]), 
-      " \n  type(layerTwoColors[10] && IDcolors && edgesFinal[10]) -->> ", type(layerTwoColors[10]), type(IDcolors), type(edgesFinal[10]), "\n",
+print("\n  layerOneNodes -->> ", len(layerOneNode),  "\n  layerTwoNodes -->> ", len(layerTwoNode), "\n",
+      " layerOneColors -->> ", len(layerOneColors), "\n"," layerTwoColors -->> ", len(layerTwoColors), "\n",
+      " IDcolors   &&  edges Final -->> ", len(IDcolors),len(edgesFinal), "\n",
+      " type(layerOneNode[10]&&layerTwoNode[10])&&layerOneColor[10])-->>", type(layerOneNode[10]), type(layerTwoNode[10]),type(layerOneColors[10]), 
+      "\n  type(layerTwoColors[10] && IDcolors && edgesFinal[10]) -->> ", type(layerTwoColors[10]), type(IDcolors), type(edgesFinal[10]), "\n",
       "edgesFinal[0] = ", edgesFinal[0], "\n edgesFinal[0] = " , edgesFinal[22] )
 
 
-time.sleep(6)
+time.sleep(3)
 
 #  #   ##     ##      #   #       ##    ##      Visulize and more . . . ! . . .  ## # # #        # #
 
@@ -155,7 +155,8 @@ for j in range( len( edgesFinal ) ):
         
     
 
-print( "\n len( layerTwoLinks) -->> ", len( layerTwoLinks),  "\n len( layerTwoLinks) -->> ",  len( layerOneLinks),  "\n len( InterConnectedLinks) -->> ",len( InterConnectedLinks) )
+print( "\n len( layerTwoLinks) -->> ", len( layerTwoLinks),  "\n len( layerTwoLinks) -->> ",  len( layerOneLinks),
+      "\n len( InterConnectedLinks) -->> ",len( InterConnectedLinks) )
 
 time.sleep(2)
 
@@ -169,5 +170,34 @@ print( "\n  You can Find this Figure and also all others in -output- folder  \n"
 
 time.sleep(2)
 
+
+for edge in layerOneLinks:
+    
+    edgeSource = edge[0]
+    edgeTarget = edge[1]
+    
+    g[edgeSource, edgeTarget, 'publishers','publishers'] = 1
+
+for edge in layerTwoLinks:
+    
+    edgeSource = edge[0]
+    edgeTarget = edge[1]
+    
+    g[edgeSource, edgeTarget, 'advertisers','advertisers'] = 1
+
+for edge in InterConnectedLinks:
+    
+    edgeSource = edge[0]
+    edgeTarget = edge[1]
+    
+    if edgeSource in layerOneNode:
+        
+        g[edgeSource, edgeTarget, 'publishers','advertisers'] = 1
+        
+    else:
+        
+        g[edgeSource, edgeTarget, 'advertisers','publishers'] = 1
+
+print(  g.get_supra_adjacency_matrix() )
 
 
