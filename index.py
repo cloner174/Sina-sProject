@@ -2,14 +2,17 @@
 import pandas as pd
 from pymnet import *
 import matplotlib.pyplot as plt
-
+import time
 
 
 datanode = pd.read_csv('data/node.csv')
 datalink = pd.read_csv('data/links.csv')
 
-print( datanode.head() )
-print( datalink.head() )
+print( "\n\n  datanode.head()  --:: \n", datanode.head(), "\n\n" )
+print(  "\n\n  datalink.head()  --:: \n", datalink.head() , "\n\n")
+
+time.sleep(2)
+
 
 
 
@@ -86,13 +89,16 @@ def main(nodes, edgesSource, edgesTarget, ColoursForNodes, LogicsForNodes):
 
 layerOneNode, layerTwoNode, layerOneColors, layerTwoColors, IDcolors, edgesFinal = main( Anode, AlinkSorc, AlinkTar, Acolornode, Alogicnode )
 
-print(len(layerOneNode), len(layerTwoNode), 
-      len(layerOneColors),len(layerTwoColors),
-      len(IDcolors),len(edgesFinal),
-      type(layerOneNode[10]), type(layerTwoNode[10]),type(layerOneColors[10]), type(layerTwoColors[10]),
-      type(IDcolors), type(edgesFinal[10]), edgesFinal[0], edgesFinal[22])
+
+print("\n  layerOneNodes -->> ", len(layerOneNode), "\n",  "\n  layerTwoNodes -->> ", len(layerTwoNode), "\n",
+      "\n  layerOneColors -->> ", len(layerOneColors), "\n","\n  layerTwoColors -->> ", len(layerTwoColors), "\n",
+      "\n  IDcolors   &&  edges Final -->> ", len(IDcolors),len(edgesFinal), "\n",
+      " \n  type(layerOneNode[10] && layerTwoNode[10]) && layerOneColors[10]) -->> ", type(layerOneNode[10]), type(layerTwoNode[10]),type(layerOneColors[10]), 
+      " \n  type(layerTwoColors[10] && IDcolors && edgesFinal[10]) -->> ", type(layerTwoColors[10]), type(IDcolors), type(edgesFinal[10]), "\n",
+      "edgesFinal[0] = ", edgesFinal[0], "\n edgesFinal[0] = " , edgesFinal[22] )
 
 
+time.sleep(6)
 
 #  #   ##     ##      #   #       ##    ##      Visulize and more . . . ! . . .  ## # # #        # #
 
@@ -119,6 +125,7 @@ for i in layerTwoNode:
 
 layerOneLinks = []
 layerTwoLinks = []
+InterConnectedLinks = []
 for j in range( len( edgesFinal ) ):
     
     edge = edgesFinal[j]
@@ -131,8 +138,32 @@ for j in range( len( edgesFinal ) ):
         if temp2 in layerOneNode:
         
             layerOneLinks.append(edge)
+    
+    elif temp1 in layerTwoNode:
+        
+        if temp2 in layerTwoNode:
+            
+            layerTwoLinks.append( edge )
+    
     else:
-        layerTwoLinks.append( edge )
+        
+        InterConnectedLinks.append(edge)
+        
+    
 
-print( len( layerTwoLinks), len( layerOneLinks), len( edgesFinal) )
+print( "\n len( layerTwoLinks) -->> ", len( layerTwoLinks),  "\n len( layerTwoLinks) -->> ",  len( layerOneLinks),  "\n len( InterConnectedLinks) -->> ",len( InterConnectedLinks) )
+
+time.sleep(2)
+
+
+#draw(g)
+
+#plt.savefig('output/Figure_1.png')
+#plt.show()
+
+print( "\n  You can Find this Figure and also all others in -output- folder  \n")
+
+time.sleep(2)
+
+
 
