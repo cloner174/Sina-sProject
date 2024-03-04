@@ -138,16 +138,20 @@ for j in range( len( edgesFinal ) ):
         if temp2 in layerOneNode:
         
             layerOneLinks.append(edge)
+        
+        else:
+            
+            InterConnectedLinks.append(edge)
     
     elif temp1 in layerTwoNode:
         
         if temp2 in layerTwoNode:
             
             layerTwoLinks.append( edge )
-    
-    else:
         
-        InterConnectedLinks.append(edge)
+        else:
+        
+            InterConnectedLinks.append(edge)
         
     
 
