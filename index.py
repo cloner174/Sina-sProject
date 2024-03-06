@@ -116,8 +116,8 @@ g.add_layer('publishers')
 for i in layerOneNode:
     
     g.add_node(i, 'publishers')
-    
-    
+
+
 for i in layerTwoNode:
     
     g.add_node(i, 'advertisers')
@@ -132,7 +132,7 @@ for j in range( len( edgesFinal ) ):
     
     temp1 = edge[0]
     temp2 = edge[1]
-
+    
     if temp1 in layerOneNode:
         
         if temp2 in layerOneNode:
@@ -141,7 +141,9 @@ for j in range( len( edgesFinal ) ):
         
         else:
             
-            InterConnectedLinks.append(edge)
+            if temp2 in layerTwoNode:
+                
+                InterConnectedLinks.append(edge)
     
     elif temp1 in layerTwoNode:
         
@@ -150,10 +152,11 @@ for j in range( len( edgesFinal ) ):
             layerTwoLinks.append( edge )
         
         else:
-        
-            InterConnectedLinks.append(edge)
-        
-    
+            
+            if temp2 in layerOneNode:
+                
+                InterConnectedLinks.append(edge)
+
 
 print( "\n len( layerTwoLinks) -->> ", len( layerTwoLinks),  "\n len( layerTwoLinks) -->> ",  len( layerOneLinks),
       "\n len( InterConnectedLinks) -->> ",len( InterConnectedLinks) )
@@ -198,6 +201,9 @@ for edge in InterConnectedLinks:
         
         g[edgeSource, edgeTarget, 'advertisers','publishers'] = 1
 
-print(  g.get_supra_adjacency_matrix() )
 
 
+draw(g, layergap=2.6,
+    nodeLabelRule={}, show=True)
+
+plt.title('Network of advertisers and publishers')
