@@ -50,3 +50,6 @@ draw(g, layergap=2.5,
     nodeLabelRule={}, show=True)
 
 plt.title('Network of advertisers and publishers')
+
+#datanode = pd.read_csv('data/node.csv')
+#datalink = pd.read_csv('data/links.csv')
