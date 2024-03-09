@@ -4,27 +4,90 @@ from pymnet import *
 import matplotlib.pyplot as plt
 import time
 import re
-#datanode = pd.read_csv('data/node.csv')
-#datalink = pd.read_csv('data/links.csv')
+
 
 
 class Sina:
     
     
     
-    def __init__(self, dataNodes: dict, dataLinkes: dict, data_adv , data_pub):
+    def __init__(self, dataNodes, dataLinkes, data_adv, data_pub):
         
-        self.datanode = dataNodes
-        self.datalink = dataLinkes
-        self.advers = data_adv
-        self.publishs = data_pub
+        self.datanodeDF = dataNodes.copy()
+        self.datalinkDF = dataLinkes.copy()
+        self.adversDF = data_adv.copy()
+        self.publishsDF = data_pub.copy()
+        
+        self.datanode = dict( dataNodes )
+        self.datalink = dict( dataLinkes )
+        self.advers = dict( data_adv )
+        self.publishs = dict( data_pub )
+    
+    
+    
+    def Re(self):
+        
+        
+        A = self.advers
+        B = self.publishs
+        
+        Akeys = list( A.keys() )
+        Bkeys = list( B.keys() )
+        
+        
+        for i in range( len( Akeys )):
+            
+            temp = str( Akeys[i] )
+            
+            temp1 = temp.lower()
+            tempp = re.search( r'advertiser', temp1 )
+            
+            if tempp != None:
+                
+                temppp = re.search( r'id', temp1)
+                
+                if temppp != None :
+                    
+                   AdverName_main = temp
+                   Adver_index_in_Akeys = i
+            
+        
+        for j in range( len( Bkeys )):
+            
+            temp = str( Bkeys[j] )
+            
+            temp1 = temp.lower()
+            tempp = re.search( r'publisher', temp1 )
+            
+            if tempp != None:
+                
+                temppp = re.search( r'id', temp1)
+                
+                if temppp != None :
+                    
+                   PublishName_main =  temp
+                   
+                   Publish_index_in_Bkeys = j
+                
+        
+        C = self.datanodeDF.copy()
+        
+        for i in range( C.shape[0] ):
+            
+            aaAA = C.loc[i, 'name']
+            temp = re.search( '\d++', aaAA )
+            temp2 = temp.group()
+            temp3 = int(temp2)
+            C.loc[i, 'name'] = temp3
+        
+        
+        return AdverName_main, Adver_index_in_Akeys, PublishName_main, Publish_index_in_Bkeys, C
     
     
     
     
     
-    
-    def main(self, nameAttr: str,# nameAttr2: str, nameAttr3: str,
+    def Layer_Split(self, nameAttr: str,# nameAttr2: str, nameAttr3: str,
              LogicsForNodes: str = 'type',  name: str = 'name', id: str = 'id', links_sorce: str = 'source', 
              links_target: str = 'target'):
         
@@ -36,7 +99,7 @@ class Sina:
         linkSorc = list( links[links_sorce]  )
         linkTar = list( links[links_target] )
         logicnode = list( nodes[LogicsForNodes] )
-
+        
         #generete_random = np.random.randint(10000)
         
         layerOneNodesNames = []
@@ -60,7 +123,7 @@ class Sina:
             #temp_attrr2 = nodes[nameAttr2][i]
             #temp_attrr3 = nodes[nameAttr3][i]
             
-            if temp_TrueFalse == True:
+            if temp_TrueFalse == False:
                 
                 layerOneNodesNames.append( temp_name )
                 layerOneNodesIndexIDs.append( temp_id)
@@ -70,7 +133,7 @@ class Sina:
                 #attr_3_LAYER1.append( { str(nameAttr3) : temp_attrr3 } )    
                 
             
-            elif temp_TrueFalse == False:
+            elif temp_TrueFalse == True:
                 
                 layerTwoNodesNames.append( temp_name )
                 layerTwoNodeIndexIDs.append( temp_id )
@@ -105,41 +168,123 @@ class Sina:
     #layer one -->> a -->> publishers
     #layer two -->> b -->> advers    
     
-    def Re(self):
+    def main( self, att:str = None, all_ = False ):
         
-        A, B, c_, d_, e_, f_, ga_ = self.main()
+        if att:
+            att = att
+        else:
+            att = 'color'
         
-        layerOneID = []
-        for i in range( len( A ) ):
+        nameOfColomnOfAdvertisersIDinAllSources, indexOfIt, ssame_for_publishers, pub_indexes, nods = self.Re()
+        
+        lyrAdverNodName,lyrAdverNodIndxID,lyrPubNodName,lyrPubNodIndxID,Edges,colorAdvrLyr1,colorPubLyr2 = self.Layer_Split(att)
+        
+        ValidNodLayer1Advers = []
+        ValidNodLayer1Advers2 = []
+        ValidNodLayer1Advers3 = []
+        for i in range( len( lyrAdverNodName )) :
             
-            aaAA = A[i]
-            temp = re.search( '\d++', aaAA )
-            temp2 = temp.group()
-            layerOneid = int(temp2)
-            A[i] = layerOneid
-            layerOneID.append( layerOneid)
+            temp = lyrAdverNodName[i]
+            temp2 = lyrAdverNodIndxID[i]
+            temp3 = colorAdvrLyr1[i]
             
-        layerTwoID = []
-        for j in range( len( B ) ):
+            vaLIdMAin = self.adversDF
             
-            bbBB = B[j]
-            temp = re.search( '\d++', bbBB )
-            temp2 = temp.group()
-            layertwoid = int(temp2)
-            B[j] = layertwoid
-            layerTwoID.append( layertwoid)
+            if temp in vaLIdMAin.loc[:, nameOfColomnOfAdvertisersIDinAllSources] :
+                
+                ValidNodLayer1Advers.append( temp )
+                ValidNodLayer1Advers2.append( temp2 )
+                ValidNodLayer1Advers3.append( temp3 )
         
         
-        return layerOneID, layerTwoID, A , B
+        ValidNodLayer1Pub = []
+        ValidNodLayer1Pub2 = []
+        ValidNodLayer1Pub3 = []
+                
+        for j in range( len( lyrPubNodName ) ) :
+            
+            temp = lyrPubNodName[j]
+            temp2 = lyrPubNodIndxID[j]
+            temp3 = colorPubLyr2[j]
+            
+            VaLIDs_maIN = self.publishsDF
+            
+            if temp in VaLIDs_maIN.loc[:, ssame_for_publishers] :
+                
+                ValidNodLayer1Pub.append( temp)
+                ValidNodLayer1Pub2.append( temp2 )
+                ValidNodLayer1Pub3.append( temp3 )
         
-                  
-             
+        
+        #for i in Edges:
+        #    
+        #    for j in i:
+        #        
+        #        j_ = j[0]
+        #        j__ = j[1]
+        #        
+        #        if j_ in ValidNodLayer1Advers2:
+        #            
+        #            if j_ in ValidNodLayer1Pub2:
+                        
+                        
+        
+        
+        if all_ != False:
             
+            return ValidNodLayer1Advers,ValidNodLayer1Advers2,ValidNodLayer1Advers3, ValidNodLayer1Pub,ValidNodLayer1Pub2,ValidNodLayer1Pub3
+        else:
             
+            return ValidNodLayer1Advers, ValidNodLayer1Pub, Edges
     
     
-    #  #   ##     ##      #   #       ##    ##      Visulize and more . . . ! . . .  ## # # #        # #
-    #print(layerOneColors) -->> 'blue', 'blue', 'blue', . . .. 
+    
+    def modify_links(self):
+        
+        
+        a, b, c = self.main() 
+        
+        
+        layerOneLinks = []
+        layerTwoLinks = []
+        InterConnectedLinks = []
+        
+        
+        for j in range( len( c ) ):
+    
+            edge = c[j]
+            
+            temp1 = edge[0]
+            temp2 = edge[1]
+            
+            if temp1 in a:
+                
+                if temp2 in a:
+                
+                    layerOneLinks.append(edge)
+                
+                else:
+                    
+                    if temp2 in b:
+                        
+                        InterConnectedLinks.append(edge)
+            
+            elif temp1 in b:
+        
+                if temp2 in b:
+                    
+                    layerTwoLinks.append( edge )
+                
+                else:
+                   
+                    if temp2 in a:
+                        
+                        InterConnectedLinks.append(edge) 
+                    
+                
+        return layerOneLinks, layerTwoLinks, InterConnectedLinks, a
+    
+    
     
     
     def GraphCreate(fully_Interconnect = False, Aspect = 1,
@@ -167,139 +312,69 @@ class Sina:
         
         time.sleep(2)
         
-        return g
+        return g        
     
     
-    
-    def finall(self):
+    def add_links(self) :
         
-        L1N, L1id , L2N , L2id, LiL, Atr1 , Atr2 = self.main()
-        
-        #N_a = input("Meghdar Avalie Baraye -a- . . \n")
-        #N_a = int(N_a)
-        #V_a = input( "Meghdar Avalie Baraye -a- . . \n ")
-        #V_a = int(V_a)
-        #N_b = input("Meghdar Avalie Baraye -b- . . \n")
-        #N_b = int(N_b)
-        #V_b = input( "Meghdar Avalie Baraye -b- . . \n ")
-        #V_b = int(V_b)
-        
-        firstA = []
-        
-        for i in range( len( L1N ) ):
-            
-            name = L1N[i]
-            id = L1id[i]
-            
-            for J in name:
-                
-                j = J[0] #avali
-                
-                if temp == j:
-                    
-                    firstA.append()
-        
-        
-    def Add_nodes_to_GraphObject(self):
+        layerOneLinks, layerTwoLinks, InterConnectedLinks , a = self.modify_links()
         
         g = self.GraphCreate()
         
-        for i in self.a:
+        for edge in layerOneLinks:
+            
+            edgeSource = edge[0]
+            edgeTarget = edge[1]
+            
+            g[edgeSource, edgeTarget, 'publishers','publishers'] = 1
         
-            g.add_node(i, 'advertisers')
+        for edge in layerTwoLinks:
             
+            edgeSource = edge[0]
+            edgeTarget = edge[1]
             
-        for j in self.b:
-            
-            g.add_node(i, 'publishers')
-            
-            
-            
-    def add_Links(self):
+            g[edgeSource, edgeTarget, 'advertisers','advertisers'] = 1
         
-        layerOneLinks = []
-        layerTwoLinks = []
-        InterConnectedLinks = []
-        
-        
-        for j in range( len( self.c ) ):
-    
-            edge = self.c[j]
+        for edge in InterConnectedLinks:
             
-            temp1 = edge[0]
-            temp2 = edge[1]
+            edgeSource = edge[0]
+            edgeTarget = edge[1]
             
-            if temp1 in self.a:
+            if edgeSource in a:
                 
-                if temp2 in self.a:
+                g[edgeSource, edgeTarget, 'publishers','advertisers'] = 1
                 
-                    layerOneLinks.append(edge)
+            else:
                 
-                else:
-                    
-                    if temp2 in self.b:
-                        
-                        InterConnectedLinks.append(edge)
-            
-            elif temp1 in self.b:
+                g[edgeSource, edgeTarget, 'advertisers','publishers'] = 1
         
-                if temp2 in self.b:
-                    
-                    layerTwoLinks.append( edge )
-                
-                else:
-                   
-                    if temp2 in self.a:
-                        
-                        InterConnectedLinks.append(edge)
+        return g
+    
+    #  #   ##     ##      #   #       ##    ##      Visulize and more . . . ! . . .  ## # # #        # #
+    #print(layerOneColors) -->> 'blue', 'blue', 'blue', . . .. 
         
-
-print( "\n len( layerTwoLinks) -->> ", len( layerTwoLinks),  "\n len( layerOneLinks) -->> ",  len( layerOneLinks),
-      "\n len( InterConnectedLinks) -->> ",len( InterConnectedLinks) )
-
-time.sleep(2)
-
-
-#draw(g)
-
-#plt.savefig('output/Figure_1.png')
-#plt.show()
-
-print( "\n  You can Find this Figure and also all others in -output- folder  \n")
-
-time.sleep(2)
-
-
-for edge in layerOneLinks:
-    
-    edgeSource = edge[0]
-    edgeTarget = edge[1]
-    
-    g[edgeSource, edgeTarget, 'publishers','publishers'] = 1
-
-for edge in layerTwoLinks:
-    
-    edgeSource = edge[0]
-    edgeTarget = edge[1]
-    
-    g[edgeSource, edgeTarget, 'advertisers','advertisers'] = 1
-
-for edge in InterConnectedLinks:
-    
-    edgeSource = edge[0]
-    edgeTarget = edge[1]
-    
-    if edgeSource in a:
+    def Add_nodes_to_GraphObject(self):
         
-        g[edgeSource, edgeTarget, 'publishers','advertisers'] = 1
+        pass
+    #   Not Implanted
+    #    g = self.GraphCreate()
+    #    
+    #    a, b = self.main()
+    #    
+    #    for i in self.a:
+    #    
+    #        g.add_node(i, 'advertisers')
+    #        
+    #        
+    #    for j in self.b:
+    #        
+    #        g.add_node(j, 'publishers')
+    #    
+    
+    def Run_(self):
         
-    else:
+        g = self.add_links()
         
-        g[edgeSource, edgeTarget, 'advertisers','publishers'] = 1
+        return g
 
-
-
-draw(g, layergap=2.5,
-    nodeLabelRule={}, show=True)
-
-plt.title('Network of advertisers and publishers')
+#end#
