@@ -25,20 +25,21 @@ Alogicnode = list( datanode.loc[:, 'type'])
 
 
 
-def main(nodes, edgesSource, edgesTarget, ColoursForNodes, LogicsForNodes):
+def main(nodes1: list, layer1: str, nodes2: list, layer2: str , attrColsRangeStartNodes1: int,attrColsRangeEndsNodes1:int,
+         attrColsRangeStartNodes2: int,attrColsRangeEndsNodes2:int):
     
-    nods = nodes.copy()
-    esorc = edgesSource.copy()
-    etar = edgesTarget.copy()
-    colors_ = ColoursForNodes.copy()
-    logics_ = LogicsForNodes.copy()
+    nods1 = nodes1.copy()
+    nods2 = nodes2.copy()
     
     layerOneNodes = []
     layerTwoNodes = []
-    layerOneColors = []
-    layerTwoColors = []
+    layerOne_attr = {}
+    layerTwo_attr = {}
+    layerOne_colors = {}
+    layerTwo_colors = {}
     
-    for i in range( len( nods )):
+    
+    for i in range( len( nods1 )):
         
         temp = logics_[i]
         if temp == True:
@@ -204,6 +205,15 @@ for edge in InterConnectedLinks:
 
 
 draw(g, layergap=2.6,
-    nodeLabelRule={}, show=True)
+    nodeLabelRule={},)
+
 
 plt.title('Network of advertisers and publishers')
+plt.show()
+
+
+for i in 
+
+
+
+
