@@ -1,24 +1,43 @@
 from pymnet import *
 import matplotlib.pyplot as plt
 import pandas as pd
+import re
 
 
 
 
 
 
-advertissers = pd.read_csv('data/advertisers.csv' )
+advertiser = pd.read_csv('data/advertisers.csv' )
 
-publishers = pd.read_csv('data/publishers.csv')
+publisher = pd.read_csv('data/publishers.csv')
 
-interactions = pd.read_csv('data/interactions.csv')
+links = pd.read_csv('data/links.csv')
 
-
-advertissers.head()
-publishers.head()
-interactions.head()
+nodes =  pd.read_csv('data/node.csv')
 
 
+advertiser.head()
+links.head()
+nodes.head()
+publisher.head()
+
+link = dict(links)
+node = dict(nodes)
+
+link.keys()
+node.keys()
+
+
+names = node['name']
+
+
+
+links = pd.DataFrame(links)
+
+
+links.head()
+links.columns
 advertissers.columns
 publishers.columns
 interactions.columns
@@ -43,6 +62,9 @@ advertisers = advertissers.set_axis([ 'rowNum', 'ID', 'AdvertiserID', 'MediaPlan
 
 nodeAdvers = list( advertisers.loc[:, "CampaignCategoryID"].unique() )
 nodePublishs = list( publishers.loc[:, "PublisherID"].unique() )
+
+links_ = list(links.loc[:,'source'].unique())
+
 
 
 

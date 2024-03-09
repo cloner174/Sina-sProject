@@ -110,7 +110,8 @@ g = MultilayerNetwork(aspects=1,
 
 g.add_layer('advertisers')
 g.add_layer('publishers')
-
+g.add_layer()
+g.add_node()
 #print(layerOneColors) -->> 'blue', 'blue', 'blue', . . .. 
 
 

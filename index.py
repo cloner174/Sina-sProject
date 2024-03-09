@@ -3,162 +3,258 @@ import pandas as pd
 from pymnet import *
 import matplotlib.pyplot as plt
 import time
+import re
+#datanode = pd.read_csv('data/node.csv')
+#datalink = pd.read_csv('data/links.csv')
 
 
-datanode = pd.read_csv('data/node.csv')
-datalink = pd.read_csv('data/links.csv')
-
-print( "\n  datanode.head()  --:: \n", datanode.head(), "\n" )
-time.sleep(2)
-print(  "\n  datalink.head()  --:: \n", datalink.head() , "\n")
-time.sleep(2)
-
-
-
-
-Anode = list( datanode.loc[:,'id'] )
-AlinkSorc = list( datalink.loc[:, 'source'] )
-AlinkTar = list( datalink.loc[:, 'target'])
-Acolornode = list( datanode.loc[:, 'color'])
-Alogicnode = list( datanode.loc[:, 'type'])
-
-
-
-
-def main(nodes, edgesSource, edgesTarget, ColoursForNodes, LogicsForNodes):
+class Sina:
     
-    nods = nodes.copy()
-    esorc = edgesSource.copy()
-    etar = edgesTarget.copy()
-    colors_ = ColoursForNodes.copy()
-    logics_ = LogicsForNodes.copy()
     
-    layerOneNodes = []
-    layerTwoNodes = []
-    layerOneColors = []
-    layerTwoColors = []
     
-    for i in range( len( nods )):
+    def __init__(self, dataNodes: dict, dataLinkes: dict, data_adv , data_pub):
         
-        temp = logics_[i]
-        if temp == True:
+        self.datanode = dataNodes
+        self.datalink = dataLinkes
+        self.advers = data_adv
+        self.publishs = data_pub
+    
+    
+    
+    
+    
+    
+    def main(self, nameAttr: str,# nameAttr2: str, nameAttr3: str,
+             LogicsForNodes: str = 'type',  name: str = 'name', id: str = 'id', links_sorce: str = 'source', 
+             links_target: str = 'target'):
+        
+        
+        nodes = self.datanode
+        links = self.datalink
+        
+        
+        linkSorc = list( links[links_sorce]  )
+        linkTar = list( links[links_target] )
+        logicnode = list( nodes[LogicsForNodes] )
+
+        #generete_random = np.random.randint(10000)
+        
+        layerOneNodesNames = []
+        layerTwoNodesNames = []
+        layerOneNodesIndexIDs = []
+        layerTwoNodeIndexIDs = []
+        attrLAYER1 = []
+        attrLAYER2 = []
+        #attr_2_LAYER1 = []
+        #attr_2_LAYER2 = []
+        #attr_3_LAYER1 = []
+        #attr_3_LAYER2 = []
+        trash_ = []
+        
+        for i in range( len( logicnode )):
             
-            layerOneNodes.append( nods[i] )
-            layerOneColors.append( colors_[i] )
-        
-        elif temp == False:
+            temp_name= nodes[name][i]
+            temp_id = nodes[id][i]
+            temp_TrueFalse = nodes[LogicsForNodes][i]
+            temp_attrr1 = nodes[nameAttr][i]
+            #temp_attrr2 = nodes[nameAttr2][i]
+            #temp_attrr3 = nodes[nameAttr3][i]
             
-            layerTwoNodes.append( nods[i] )
-            layerTwoColors.append( colors_[i] )
-        
-        else:
-            
-            continue
-        
-    Edges = []
-    for i in range( len( esorc )):
-        
-        tempsorc = esorc[i]
-        temptar = etar[i]
-        
-        tempedge = ( tempsorc, temptar )
-        Edges.append( tempedge )
-    
-    
-    
-    IDcolor = {}
-    for i in range( len( layerOneNodes )):
-        
-        temp1 = int( layerOneNodes[i] )
-        temp2 = layerOneColors[i]
-        
-        IDcolor.update( { temp1 : temp2 })
-    
-    
-    for i in range( len( layerTwoNodes )):
-        
-        temp1 = int( layerTwoNodes[i] )
-        temp2 = layerTwoColors[i]
-        
-        IDcolor.update( { temp1 : temp2 })
-    
-    return layerOneNodes, layerTwoNodes, layerOneColors,  layerTwoColors, IDcolor, Edges
-
-
-
-
-layerOneNode, layerTwoNode, layerOneColors, layerTwoColors, IDcolors, edgesFinal = main( Anode, AlinkSorc, AlinkTar, Acolornode, Alogicnode )
-
-
-print("\n  layerOneNodes -->> ", len(layerOneNode),  "\n  layerTwoNodes -->> ", len(layerTwoNode), "\n",
-      " layerOneColors -->> ", len(layerOneColors), "\n"," layerTwoColors -->> ", len(layerTwoColors), "\n",
-      " IDcolors   &&  edges Final -->> ", len(IDcolors),len(edgesFinal), "\n",
-      " type(layerOneNode[10]&&layerTwoNode[10])&&layerOneColor[10])-->>", type(layerOneNode[10]), type(layerTwoNode[10]),type(layerOneColors[10]), 
-      "\n  type(layerTwoColors[10] && IDcolors && edgesFinal[10]) -->> ", type(layerTwoColors[10]), type(IDcolors), type(edgesFinal[10]), "\n",
-      "edgesFinal[0] = ", edgesFinal[0], "\n edgesFinal[0] = " , edgesFinal[22] )
-
-
-time.sleep(3)
-
-#  #   ##     ##      #   #       ##    ##      Visulize and more . . . ! . . .  ## # # #        # #
-
-
-g = MultilayerNetwork(aspects=1,
-                      fullyInterconnected=False)
-
-
-g.add_layer('advertisers')
-g.add_layer('publishers')
-
-#print(layerOneColors) -->> 'blue', 'blue', 'blue', . . .. 
-
-
-for i in layerOneNode:
-    
-    g.add_node(i, 'publishers')
-
-
-for i in layerTwoNode:
-    
-    g.add_node(i, 'advertisers')
-
-
-layerOneLinks = []
-layerTwoLinks = []
-InterConnectedLinks = []
-for j in range( len( edgesFinal ) ):
-    
-    edge = edgesFinal[j]
-    
-    temp1 = edge[0]
-    temp2 = edge[1]
-    
-    if temp1 in layerOneNode:
-        
-        if temp2 in layerOneNode:
-        
-            layerOneLinks.append(edge)
-        
-        else:
-            
-            if temp2 in layerTwoNode:
+            if temp_TrueFalse == True:
                 
-                InterConnectedLinks.append(edge)
-    
-    elif temp1 in layerTwoNode:
-        
-        if temp2 in layerTwoNode:
-            
-            layerTwoLinks.append( edge )
-        
-        else:
-            
-            if temp2 in layerOneNode:
+                layerOneNodesNames.append( temp_name )
+                layerOneNodesIndexIDs.append( temp_id)
                 
-                InterConnectedLinks.append(edge)
+                attrLAYER1.append( { str(nameAttr) : temp_attrr1 } )
+                #attr_2_LAYER1.append( { str(nameAttr2) : temp_attrr2 } )
+                #attr_3_LAYER1.append( { str(nameAttr3) : temp_attrr3 } )    
+                
+            
+            elif temp_TrueFalse == False:
+                
+                layerTwoNodesNames.append( temp_name )
+                layerTwoNodeIndexIDs.append( temp_id )
+                
+                attrLAYER2.append( { str(nameAttr) : temp_attrr1 } )
+                #attr_2_LAYER2.append( { str(nameAttr2) : temp_attrr2 } )
+                #attr_3_LAYER2.append( { str(nameAttr3) : temp_attrr3 } )              
+                
+            else:
+                
+                trash_.append( (temp_name,temp_id) )
+        
+        #attr_layer1 = [ attrLAYER1, attr_2_LAYER1, attr_3_LAYER1 ]
+        #attr_layer2 = [attrLAYER2, attr_2_LAYER2, attr_3_LAYER2]
+        attr_layer1 = attrLAYER1
+        attr_layer2 = attrLAYER2
+        
+        
+        Edges = []
+        for i in range( len( linkSorc )):
+            
+            tempsorc = linkSorc[i]
+            temptar = linkTar[i]
+            
+            tempedge = ( tempsorc, temptar )
+            Edges.append( tempedge ) 
+        
+        
+        return layerOneNodesNames, layerOneNodesIndexIDs, layerTwoNodesNames, layerTwoNodeIndexIDs, Edges,  attr_layer1, attr_layer2#, trash_
+    
+    
+    #layer one -->> a -->> publishers
+    #layer two -->> b -->> advers    
+    
+    def Re(self):
+        
+        A, B, c_, d_, e_, f_, ga_ = self.main()
+        
+        layerOneID = []
+        for i in range( len( A ) ):
+            
+            aaAA = A[i]
+            temp = re.search( '\d++', aaAA )
+            temp2 = temp.group()
+            layerOneid = int(temp2)
+            A[i] = layerOneid
+            layerOneID.append( layerOneid)
+            
+        layerTwoID = []
+        for j in range( len( B ) ):
+            
+            bbBB = B[j]
+            temp = re.search( '\d++', bbBB )
+            temp2 = temp.group()
+            layertwoid = int(temp2)
+            B[j] = layertwoid
+            layerTwoID.append( layertwoid)
+        
+        
+        return layerOneID, layerTwoID, A , B
+        
+                  
+             
+            
+            
+    
+    
+    #  #   ##     ##      #   #       ##    ##      Visulize and more . . . ! . . .  ## # # #        # #
+    #print(layerOneColors) -->> 'blue', 'blue', 'blue', . . .. 
+    
+    
+    def GraphCreate(fully_Interconnect = False, Aspect = 1,
+                    layer_one_name = 'Advertisers', 
+                    layer_two_name = 'Publishers'):
+        
+        print( " Getting things Ready . . . ")
+        time.sleep(2)
+        
+        g = MultilayerNetwork(aspects = Aspect,
+                          fullyInterconnected = fully_Interconnect)
+        
+        print( "Seccessfully Create The Graph Object !")
+        time.sleep(2)
+        print( " Adding layers . . . ")
+        time.sleep(2)
+        
+        g.add_layer(layer_one_name)
+        g.add_layer(layer_two_name)
+        
+        print(" Done !")
+        time.sleep(2)
+        
+        print(g.get_layers())
+        
+        time.sleep(2)
+        
+        return g
+    
+    
+    
+    def finall(self):
+        
+        L1N, L1id , L2N , L2id, LiL, Atr1 , Atr2 = self.main()
+        
+        #N_a = input("Meghdar Avalie Baraye -a- . . \n")
+        #N_a = int(N_a)
+        #V_a = input( "Meghdar Avalie Baraye -a- . . \n ")
+        #V_a = int(V_a)
+        #N_b = input("Meghdar Avalie Baraye -b- . . \n")
+        #N_b = int(N_b)
+        #V_b = input( "Meghdar Avalie Baraye -b- . . \n ")
+        #V_b = int(V_b)
+        
+        firstA = []
+        
+        for i in range( len( L1N ) ):
+            
+            name = L1N[i]
+            id = L1id[i]
+            
+            for J in name:
+                
+                j = J[0] #avali
+                
+                if temp == j:
+                    
+                    firstA.append()
+        
+        
+    def Add_nodes_to_GraphObject(self):
+        
+        g = self.GraphCreate()
+        
+        for i in self.a:
+        
+            g.add_node(i, 'advertisers')
+            
+            
+        for j in self.b:
+            
+            g.add_node(i, 'publishers')
+            
+            
+            
+    def add_Links(self):
+        
+        layerOneLinks = []
+        layerTwoLinks = []
+        InterConnectedLinks = []
+        
+        
+        for j in range( len( self.c ) ):
+    
+            edge = self.c[j]
+            
+            temp1 = edge[0]
+            temp2 = edge[1]
+            
+            if temp1 in self.a:
+                
+                if temp2 in self.a:
+                
+                    layerOneLinks.append(edge)
+                
+                else:
+                    
+                    if temp2 in self.b:
+                        
+                        InterConnectedLinks.append(edge)
+            
+            elif temp1 in self.b:
+        
+                if temp2 in self.b:
+                    
+                    layerTwoLinks.append( edge )
+                
+                else:
+                   
+                    if temp2 in self.a:
+                        
+                        InterConnectedLinks.append(edge)
+        
 
-
-print( "\n len( layerTwoLinks) -->> ", len( layerTwoLinks),  "\n len( layerTwoLinks) -->> ",  len( layerOneLinks),
+print( "\n len( layerTwoLinks) -->> ", len( layerTwoLinks),  "\n len( layerOneLinks) -->> ",  len( layerOneLinks),
       "\n len( InterConnectedLinks) -->> ",len( InterConnectedLinks) )
 
 time.sleep(2)
@@ -193,7 +289,7 @@ for edge in InterConnectedLinks:
     edgeSource = edge[0]
     edgeTarget = edge[1]
     
-    if edgeSource in layerOneNode:
+    if edgeSource in a:
         
         g[edgeSource, edgeTarget, 'publishers','advertisers'] = 1
         
@@ -203,7 +299,7 @@ for edge in InterConnectedLinks:
 
 
 
-draw(g, layergap=2.6,
+draw(g, layergap=2.5,
     nodeLabelRule={}, show=True)
 
 plt.title('Network of advertisers and publishers')
