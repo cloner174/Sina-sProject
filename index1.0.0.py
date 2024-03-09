@@ -11,7 +11,7 @@ g.add_layer('pub')
 
 
 import json
-with open('/home/admin/Documents/Python/sina/result.json', 'r') as file:
+with open('data/result.json', 'r') as file:
     data = json.load(file)
 
 
