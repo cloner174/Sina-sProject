@@ -1,0 +1,219 @@
+library(readr)
+node_data <- read_csv("data/node_data.csv")
+View(node_data)
+library(readr)
+node_data <- read.csv("data/node_data.csv")
+library(readr)
+links <- read_csv("~/Documents/Python/mr.Sina/V3.final/Sina-sProject/data/links.csv")
+View(links)
+node <- read.csv("data/node_data.csv")
+link <- read.csv("~/Documents/Python/mr.Sina/V3.final/Sina-sProject/data/links.csv")
+head(link)
+node
+node <- as.data.frame(node)
+link <- as.data.frame(link)
+dim(link)
+dim(link)[0]
+dim(link)[1]
+for (i in node$X_igraph_index )) {
+node <- as.data.frame(node)
+link <- as.data.frame(link)
+for (i in node$X_igraph_index ) {
+A <- vector( which( link$source == i) )
+B <- vector( which( link$target == i) )
+}
+for (i in node$X_igraph_index ) {
+A <- which( link$source == i )
+B <- which( link$target == i )
+}
+A
+B
+A <- vector()
+B <- vector()
+for (i in node$X_igraph_index ) {
+A <- c( A, which( link$source == i ) )
+B <- c( B, which( link$target == i ) )
+}
+A
+A[97000]
+A[9700]
+A[97004]
+which( link$source == node$X_igraph_index )
+node$X_igraph_index
+which( link$source == 27 )
+link$source[903]
+link$source[904]
+which( link$target == 27 )
+which( link$target == 500 )
+which( link$source == 500 )
+for (i in node$X_igraph_index ) {
+A <- which( link$source == i )
+}
+A
+for (i in node$X_igraph_index ) {
+A <- link$source[ which( link$source == i ) ]
+}
+A
+node$X_igraph_index
+V <- node$X_igraph_index
+class(V)
+V[1]
+length(node$X_igraph_index)
+length(V)
+for (i in V ) {
+A <- link$source[ which( link$source == i ) ]
+}
+A
+A <- vector()
+for (i in V ) {
+A <- c( A, link$source[ which( link$source == i ) ] )
+}
+A
+for (i in V ) {
+A <- c( A, which( link$source == i ) )
+}
+A
+A <- list()
+for (i in V ) {
+A <- as.list( which( link$source == i ) )
+}
+A
+for (i in c(1:length(V) ) {
+for (i in c(1:length(V) ) {
+for (i in c(1:length(V) )) {
+temp <- V[i]
+A[[i]] <- as.list( which( link$source == temp ) )
+}
+A
+for (i in c(1:length(V) )) {
+temp <- V[i]
+A[i] <- as.list( which( link$source == temp ) )
+}
+A
+for (i in c(1:length(V) )) {
+temp <- V[i]
+A[[i]] <- which( link$source == temp )
+}
+A <- list()
+for (i in c(1:length(V) )) {
+temp <- V[i]
+A[[i]] <- which( link$source == temp )
+}
+A
+for (i in c(1:702)) {
+temp <- A[[i]]
+}
+te,p
+temp
+for (i in c(1:702)) {
+temp <- A[[i]]
+}
+B <- vector()
+for (i in c(1:702)) {
+temp <- A[[i]]
+B <- c( B, temp )
+}
+B
+for (i in c(1:702)) {
+temp <- A[[i]]
+B <- c( B, temp )
+}
+B <- vector()
+for (i in c(1:702)) {
+temp <- A[[i]]
+for (j in temp) {
+B <- c( B, j)
+}
+}
+B
+dim(links)
+969395 /97162
+C <- list()
+for (i in c(1:702)) {
+temp <- A[[i]]
+for (j in temp) {
+C[[i]] <- which(  j == link$target
+}
+for (i in c(1:702)) {
+temp <- A[[i]]
+for (j in temp) {
+C[[i]] <- which(  j == link$target
+}
+for (i in c(1:702)) {
+temp <- A[[i]]
+for (j in temp) {
+C[[i]] <- which(  j == link$target)
+}
+}
+View(A)
+for (i in c(1:length(A))) {
+for (j in c(1:length(A[[i]]))) {
+temp <- A[[i]][j]
+}
+}
+temp
+A
+dim(A)
+A.shape
+shape(A)
+length(A)
+702*6
+for (i in c(1:length(A))) {
+for (j in c(1:length(A[[i]]))) {
+temp <- A[[i]][j]
+which( link$target == temp )
+}
+}
+B
+link %>%
+select()
+library(dtplyr)
+library(dygraphs)
+library(dplyr)
+library(dbplyr)
+link %>%
+select()
+link %>%
+filter()
+link %>%
+filter(B)
+link %>%
+select(B)
+link %>%
+group_by(B)
+link %>%
+group_by(.drop = )
+link
+link %>%
+group_by(.drop = B)
+browseVignettes(package = "dplyr")
+link %>%
+filter( source = A )
+filter( source == A )
+link %>%
+filter( source == A )
+link %>%
+filter( source == V)
+V
+link %>%
+filter( target == V)
+V
+link %>%
+filter( source == V | target == V)
+link %>%
+filter( target == V)
+link_data <- link %>%
+''
+link
+link_data <- link %>%
+filter( source == V | target == V)
+link_data
+link_data <- link %>%
+select( c(source , target)) %>%
+filter( V)
+link_data <- link %>%
+filter( source == V | target == V)
+link_data
+write_csv(link_data, 'link_data.csv')
+write_csv(link_data, 'output/link_data.csv')
+write_csv(link_data, '~/Documents/Python/mr.Sina/V3.final/Sina-sProject/data/link_data.csv')
