@@ -6,7 +6,8 @@ from sklearn.ensemble import RandomForestClassifier
 
 # Assuming link_data and node_data are your data frames
 # Adjust column names based on your actual data frame structure
-
+node_data = pd.read_csv("data/node.csv")
+link_data = pd.read_csv("data/links.csv")
 # Create a graph
 G = nx.Graph()
 

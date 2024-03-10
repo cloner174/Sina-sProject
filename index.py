@@ -168,16 +168,14 @@ class Sina:
     #layer one -->> a -->> publishers
     #layer two -->> b -->> advers    
     
-    def main( self, att:str = None, all_ = False ):
+    def main( self, nameOfColomnOfAdvertisersIDinAllSources, ssame_for_publishers,
+             lyrAdverNodName, lyrAdverNodIndxID,lyrPubNodName,lyrPubNodIndxID,
+             colorAdvrLyr1, colorPubLyr2,  att:str = None):
         
         if att:
             att = att
         else:
             att = 'color'
-        
-        nameOfColomnOfAdvertisersIDinAllSources, indexOfIt, ssame_for_publishers, pub_indexes, nods = self.Re()
-        
-        lyrAdverNodName,lyrAdverNodIndxID,lyrPubNodName,lyrPubNodIndxID,Edges,colorAdvrLyr1,colorPubLyr2 = self.Layer_Split(att)
         
         ValidNodLayer1Advers = []
         ValidNodLayer1Advers2 = []
@@ -227,22 +225,18 @@ class Sina:
         #            
         #            if j_ in ValidNodLayer1Pub2:
                         
-                        
-        
-        
-        if all_ != False:
+
             
-            return ValidNodLayer1Advers,ValidNodLayer1Advers2,ValidNodLayer1Advers3, ValidNodLayer1Pub,ValidNodLayer1Pub2,ValidNodLayer1Pub3
-        else:
-            
-            return ValidNodLayer1Advers, ValidNodLayer1Pub, Edges
+        return ValidNodLayer1Advers,ValidNodLayer1Advers2,ValidNodLayer1Advers3, ValidNodLayer1Pub,ValidNodLayer1Pub2,ValidNodLayer1Pub3
     
     
     
-    def modify_links(self):
+    def modify_links(self,ValidNodLayer1Advers, ValidNodLayer1Pub, Edges):
         
         
-        a, b, c = self.main() 
+        a = ValidNodLayer1Advers
+        b = ValidNodLayer1Pub
+        c = Edges
         
         
         layerOneLinks = []
@@ -315,11 +309,9 @@ class Sina:
         return g        
     
     
-    def add_links(self) :
+    def add_links(self, g ,layerOneLinks, layerTwoLinks, InterConnectedLinks , a) :
         
-        layerOneLinks, layerTwoLinks, InterConnectedLinks , a = self.modify_links()
         
-        g = self.GraphCreate()
         
         for edge in layerOneLinks:
             
@@ -373,8 +365,20 @@ class Sina:
     
     def Run_(self):
         
-        g = self.add_links()
+        a, b, c, d, e = self.Re()
         
-        return g
+        nameAttr = 'color'
+        
+        f,g,h,i,j,k,l = self.Layer_Split(nameAttr)
+        
+        m, n, o , p, q, r = self.main(a, c,f,g,h,i,k,l)
+        
+        s, t, u = self.modify_links(m, p, j )
+        
+        Gtemp = self.GraphCreate()
+        
+        G = self.add_links( Gtemp,s, t, u, m )
+        
+        return G
 
 #end#
