@@ -3,7 +3,7 @@ from pymnet import *
 import time
 
 
-class Sina:
+class Visualize:
     
     
     
