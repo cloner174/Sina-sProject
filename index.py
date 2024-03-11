@@ -519,11 +519,11 @@ class Visualize:
             return G
         elif inn_ == "draw":
             
-            draw(G, layergap=2.5,
-                 nodeLabelRule={}, show=True )
+            draw(G, layout= 'fr', layergap=2.5,
+                 nodeLabelRule={}, show=True ,alignedNodes = False, layerPadding = 0.1 )
             exit()
         else:
-            raise KeyError( "\n Invalid Command \n")
+            raise KeyError( " Invalid Command ")
 
 
 #end#
