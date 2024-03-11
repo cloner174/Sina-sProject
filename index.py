@@ -509,18 +509,18 @@ class Visualize:
         time.sleep(2)
         G = self.add_links( Gtemp,layerOneLinks, layerTwoLinks, InterConnectedLinks )
         
-        print( " Your Gragh is Now Ready To use .")
+        print( "Your Gragh is Now Ready To use .")
         time.sleep(2)
         
-        inn_ = input( "\n  Type  - draw - to start drawing OR press inter to Return Graph Object " )
+        inn_ = input( "\n\n  Type  - draw - to start drawing OR press inter to Return Graph Object    ..typeHere// " )
         time.sleep(2)
         if inn_ == "":
             
             return G
         elif inn_ == "draw":
             
-            draw(G, layout =  "spring", layergap=2.5,
-                 nodeLabelRule={}, show=True, )
+            draw(G, layergap=2.5,
+                 nodeLabelRule={}, show=True )
             exit()
         else:
             raise KeyError( "\n Invalid Command \n")
