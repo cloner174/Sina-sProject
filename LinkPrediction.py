@@ -27,7 +27,9 @@ print("""\n\n\n                                       Welcome,
 from index import Sina
 
 mine = Sina(node_data, link_data, advers, pubs)
+
 AdvColName, AdvColIndex, PubColName, PubColIndex, RenamedNodeData = mine.Re()
+
 len(RenamedNodeData)
 
 Uadv = list(advers.iloc[:,AdvColIndex].unique())
@@ -86,14 +88,17 @@ for _, link_row in link_data.iterrows():
     G.add_edge(link_row['source'], link_row['target'], key=link_row['key'])
 
 
-# extract relevant features for link prediction
 def extract_features(G, edges):
     features = []
     for edge in edges:
         source, target = edge
-        feature = {'common_neighbors': len(list(nx.common_neighbors(G, source, target)))}
+        common_neighbors = list(nx.common_neighbors(G, source, target))
+        jaccard_coefficient = len(common_neighbors) / len(set(G.neighbors(source)).union(G.neighbors(target)))
+        
+        feature = {'common_neighbors': len(common_neighbors), 'jaccard_coefficient': jaccard_coefficient}
         features.append(feature)
     return features
+
 
 # Generate positive and negative examples for training
 non_edges = list(nx.non_edges(G))
@@ -123,17 +128,17 @@ clf.fit(X_train, y_train)
 # Predict on the test
 y_pred = clf.predict_proba(X_test)[:, 1]
 
+
 # Evaluate (using ROC-AUC)
 roc_auc = roc_auc_score(y_test, y_pred)
-print("ROC-AUC Score: ", roc_auc)
 
+print("ROC-AUC Score: ", roc_auc)
 # ROC-AUC Score: 0.9683730947010214
 
-from index import Visualize
+
 
 
 fpr, tpr, thresholds = roc_curve(y_test, y_pred)
-
 
 import matplotlib.pyplot as plt
 
@@ -145,6 +150,42 @@ plt.ylabel('True Positive Rate')
 plt.title('Receiver Operating Characteristic (ROC) Curve')
 plt.legend(loc='lower right')
 plt.show()
+
+
+
+
+
+
+from sklearn.metrics import precision_recall_curve, average_precision_score
+
+precision, recall, _ = precision_recall_curve(y_test, y_pred)
+
+avg_precision = average_precision_score(y_test, y_pred)
+
+plt.figure(figsize=(8, 8))
+plt.plot(recall, precision, color='darkred', lw=2, label=f'Precision-Recall curve (AP = {avg_precision:.2f})')
+plt.xlabel('Recall')
+plt.ylabel('Precision')
+plt.title('Precision-Recall Curve')
+plt.legend(loc='upper right')
+plt.show()
+
+
+
+
+
+#from sklearn.metrics import confusion_matrix
+#import seaborn as sns
+#import numpy as np
+#y_test = np.asarray(y_test)
+#cm = confusion_matrix(y_test, y_pred)
+#plt.figure(figsize=(6, 6))
+#sns.heatmap(cm, annot=True, fmt='g', cmap='Blues', cbar=False)
+#plt.xlabel('Predicted')
+#plt.ylabel('True')
+#plt.title('Confusion Matrix')
+#plt.show()
+
 
 
 #end#
