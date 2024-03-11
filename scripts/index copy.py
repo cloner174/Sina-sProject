@@ -206,7 +206,7 @@ for edge in InterConnectedLinks:
 
 
 draw(g, layergap=2.6,
-    nodeLabelRule={},)
+    nodeLabelRule={})
 
 
 plt.title('Network of advertisers and publishers')

@@ -1,7 +1,5 @@
 #
-import pandas as pd
 from pymnet import *
-import matplotlib.pyplot as plt
 import time
 
 
@@ -33,7 +31,7 @@ class Sina:
         for j in range( c.shape[0] ):
     
             edge = tuple( ( (c.loc[j, 'source']), (c.loc[j, 'target']) ) )
-            print(edge)
+            
             temp1 = edge[0]
             temp2 = edge[1]
             
@@ -102,28 +100,23 @@ class Sina:
             edgeSource = edge[0]
             edgeTarget = edge[1]
             
-            g[edgeSource, edgeTarget, 'publishers','publishers'] = 1
+            g[edgeSource, edgeTarget, 'advertisers','advertisers'] = 1
         
         for edge in layerTwoLinks:
             
             edgeSource = edge[0]
             edgeTarget = edge[1]
             
-            g[edgeSource, edgeTarget, 'advertisers','advertisers'] = 1
+            g[edgeSource, edgeTarget, 'publishers','publishers'] = 1
         
         for edge in InterConnectedLinks:
             
             edgeSource = edge[0]
             edgeTarget = edge[1]
             
-            if edgeSource in self.Advers_nod:
-                
-                g[edgeSource, edgeTarget, 'advertisers','publishers'] = 1
-                
-            else:
-                
-                g[edgeSource, edgeTarget, 'publishers','advertisers'] = 1
-               
+            g[edgeSource, edgeTarget, 'advertisers','publishers'] = 1
+            
+        
         return g
     
     
@@ -140,6 +133,19 @@ class Sina:
         
         print( " Your Gragh is Now Ready To use .")
         time.sleep(2)
-        return G
+        
+        inn_ = input( "\n  Type  - draw - to start drawing OR press inter to Return Graph Object " )
+        time.sleep(2)
+        if inn_ == "":
+            
+            return G
+        elif inn_ == "draw":
+            
+            draw(G, layout =  "spring", layergap=2.5,
+                 nodeLabelRule={}, show=True, )
+            exit()
+        else:
+            raise KeyError( "\n Invalid Command \n")
+        
     
 #end#
