@@ -1,3 +1,5 @@
+library(dplyr)
+
 node <- read.csv("data/node_data.csv")
 
 link <- read.csv("~/Documents/Python/mr.Sina/V3.final/Sina-sProject/data/links.csv")
@@ -21,12 +23,24 @@ node$X_igraph_index
 
 V <- node$X_igraph_index
 
+VV <- list()
+for (i in c(1:702)) {
+  VV[[i]] <- which(link$source == V[i] | link$target == V[i])
+}
 
-link_data <- link %>%
-  filter( source == V | target == V)
+
+LL <- vector()
+for (i in c(1:702)) {
+  temp <- VV[[i]]
+  for (j in temp) {
+    LL <- c(LL, j)
+  }
+}
+
+link_data <- link[LL,]
 
 link_data
 
-write_csv(link_data, 'link_data.csv')
-write_csv(link_data, 'output/link_data.csv')
-write_csv(link_data, '~/Documents/Python/mr.Sina/V3.final/Sina-sProject/data/link_data.csv')
+write.csv(link_data, 'link_dataFinal.csv')
+write.csv(link_data, 'output/link_dataFinal.csv')
+write.csv(link_data, '~/Documents/Python/mr.Sina/V3.final/Sina-sProject/data/link_dataFinal.csv')

@@ -57,7 +57,7 @@ allnodes_id = list( node_data.loc[:,'id'] )
 ##
 
 
-link_data = pd.read_csv("data/link_data.csv")
+link_data = pd.read_csv("data/link_dataFinal.csv")
 
 
 
@@ -72,14 +72,12 @@ for _, node_row in node_data.iterrows():
 for _, link_row in link_data.iterrows():
     G.add_edge(link_row['source'], link_row['target'], key=link_row['key'])
 
-# Feature extraction
-# Here you should extract relevant features for link prediction
-# Replace this with your own feature extraction logic
+
+# extract relevant features for link prediction
 def extract_features(G, edges):
     features = []
     for edge in edges:
         source, target = edge
-        # Replace this with your own feature extraction logic based on node attributes, graph structure, etc.
         feature = {'common_neighbors': len(list(nx.common_neighbors(G, source, target)))}
         features.append(feature)
     return features
@@ -88,31 +86,32 @@ def extract_features(G, edges):
 non_edges = list(nx.non_edges(G))
 edges = list(G.edges)
 
+
 # Set labels for positive and negative examples
 labels = [1] * len(edges) + [0] * len(non_edges)
 
-# Combine positive and negative examples
+
+# Combine positive and negative
 all_edges = edges + non_edges
 
 # Extract features for each edge
 features = extract_features(G, all_edges)
 
-# Convert features to DataFrame
+# Convert to DataFrame
 features_df = pd.DataFrame(features)
 
-# Split the data into training and testing sets
+# Split the data
 X_train, X_test, y_train, y_test = train_test_split(features_df, labels, test_size=0.2, random_state=42)
 
-# Train a classifier (e.g., RandomForestClassifier)
+# Train a classifier
 clf = RandomForestClassifier()
 clf.fit(X_train, y_train)
 
-# Predict on the test set
+# Predict on the test
 y_pred = clf.predict_proba(X_test)[:, 1]
 
-# Evaluate the performance (e.g., using ROC-AUC)
+# Evaluate (using ROC-AUC)
 roc_auc = roc_auc_score(y_test, y_pred)
-print("ROC-AUC Score:", roc_auc)
+print("ROC-AUC Score: ", roc_auc)
 
-
-# ROC-AUC Score: 0.5003413771489971
+# ROC-AUC Score: 0.9683730947010214

@@ -3,42 +3,37 @@ import pandas as pd
 from pymnet import *
 import matplotlib.pyplot as plt
 import time
-import re
-
 
 
 class Sina:
     
     
     
-    def __init__(self, dataNodes, dataLinkes, ValidNodLayer1Advers, ValidNodLayer1Pub, Edges):
+    def __init__(self, data_nodes, data_linkes, Advers_nod , Pub_nod):
         
-        self.datanodeDF = dataNodes
-        self.datalinkDF = dataLinkes
-        self.ValidNodLayer1Advers = ValidNodLayer1Advers
-        self.ValidNodLayer1Pub = ValidNodLayer1Pub
-        self.Edges = Edges
-
+        self.data_nodes = data_nodes
+        self.data_linkes = data_linkes
+        self.Advers_nod = Advers_nod
+        self.Pub_nod = Pub_nod
     
     
     
     def modify_links(self):
         
+        print( " Getting things Ready . . . ")
         
-        a = self.ValidNodLayer1Advers
-        b = self.ValidNodLayer1Pub
-        c = self.Edges
-        
+        a = self.Advers_nod
+        b = self.Pub_nod
+        c = self.data_linkes
         
         layerOneLinks = []
         layerTwoLinks = []
         InterConnectedLinks = []
         
-        
-        for j in range( len( c ) ):
+        for j in range( c.shape[0] ):
     
-            edge = c[j]
-            
+            edge = tuple( ( (c.loc[j, 'source']), (c.loc[j, 'target']) ) )
+            print(edge)
             temp1 = edge[0]
             temp2 = edge[1]
             
@@ -67,7 +62,7 @@ class Sina:
                         InterConnectedLinks.append(edge) 
                     
                 
-        return layerOneLinks, layerTwoLinks, InterConnectedLinks, a
+        return layerOneLinks, layerTwoLinks, InterConnectedLinks
     
     
     
@@ -75,7 +70,7 @@ class Sina:
                     layer_one_name = 'Advertisers', 
                     layer_two_name = 'Publishers'):
         
-        print( " Getting things Ready . . . ")
+        print( " Starting to Create Graph . . . ")
         time.sleep(2)
         
         g = MultilayerNetwork(aspects = Aspect,
@@ -99,8 +94,7 @@ class Sina:
         return g        
     
     
-    def add_links(self, g ,layerOneLinks, layerTwoLinks, InterConnectedLinks , a) :
-        
+    def add_links(self, g ,layerOneLinks, layerTwoLinks, InterConnectedLinks) :
         
         
         for edge in layerOneLinks:
@@ -122,46 +116,30 @@ class Sina:
             edgeSource = edge[0]
             edgeTarget = edge[1]
             
-            if edgeSource in a:
+            if edgeSource in self.Advers_nod:
                 
-                g[edgeSource, edgeTarget, 'publishers','advertisers'] = 1
+                g[edgeSource, edgeTarget, 'advertisers','publishers'] = 1
                 
             else:
                 
-                g[edgeSource, edgeTarget, 'advertisers','publishers'] = 1
-        
+                g[edgeSource, edgeTarget, 'publishers','advertisers'] = 1
+               
         return g
     
-    #  #   ##     ##      #   #       ##    ##      Visulize and more . . . ! . . .  ## # # #        # #
-    #print(layerOneColors) -->> 'blue', 'blue', 'blue', . . .. 
-        
-    def Add_nodes_to_GraphObject(self):
-        
-        pass
-    #   Not Implanted
-    #    g = self.GraphCreate()
-    #    
-    #    a, b = self.main()
-    #    
-    #    for i in self.a:
-    #    
-    #        g.add_node(i, 'advertisers')
-    #        
-    #        
-    #    for j in self.b:
-    #        
-    #        g.add_node(j, 'publishers')
-    #    
     
     def Run_(self ):
         
-        
+        print(" Running !")
+        time.sleep(5)
         layerOneLinks, layerTwoLinks, InterConnectedLinks = self.modify_links()
         
         Gtemp = self.GraphCreate()
+        print("Almost Finish !")
+        time.sleep(2)
+        G = self.add_links( Gtemp,layerOneLinks, layerTwoLinks, InterConnectedLinks )
         
-        G = self.add_links( Gtemp,layerOneLinks, layerTwoLinks, InterConnectedLinks, self.ValidNodLayer1Advers )
-        
+        print( " Your Gragh is Now Ready To use .")
+        time.sleep(2)
         return G
-
+    
 #end#
