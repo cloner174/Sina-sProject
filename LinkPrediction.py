@@ -1,14 +1,27 @@
+#                    # #                          In the name of God    # #
+#
+#
 import networkx as nx
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import roc_auc_score
+from sklearn.metrics import roc_auc_score, roc_curve
 from sklearn.ensemble import RandomForestClassifier
+
+
 
 #Bring Up data!
 node_data = pd.read_csv("data/node.csv")
 link_data = pd.read_csv("data/links.csv")
 advers = pd.read_csv("data/advertisers.csv")
 pubs = pd.read_csv("data/publishers.csv")
+
+
+
+print("""\n\n\n                                       Welcome,
+                       This file contains a heavy performance that may cause over working with your cpu
+                       Please Do not Worried and be patient !""")
+
+
 
 #This is our creation!
 from index import Sina
@@ -115,6 +128,23 @@ roc_auc = roc_auc_score(y_test, y_pred)
 print("ROC-AUC Score: ", roc_auc)
 
 # ROC-AUC Score: 0.9683730947010214
+
+from index import Visualize
+
+
+fpr, tpr, thresholds = roc_curve(y_test, y_pred)
+
+
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(8, 8))
+plt.plot(fpr, tpr, color='darkorange', lw=2, label=f'ROC curve (AUC = {roc_auc:.2f})')
+plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver Operating Characteristic (ROC) Curve')
+plt.legend(loc='lower right')
+plt.show()
 
 
 #end#
