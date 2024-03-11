@@ -4,13 +4,13 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import roc_auc_score
 from sklearn.ensemble import RandomForestClassifier
 
-# Assuming link_data and node_data are your data frames
-# Adjust column names based on your actual data frame structure
+#Bring Up data!
 node_data = pd.read_csv("data/node.csv")
 link_data = pd.read_csv("data/links.csv")
 advers = pd.read_csv("data/advertisers.csv")
 pubs = pd.read_csv("data/publishers.csv")
 
+#This is our creation!
 from index import Sina
 
 mine = Sina(node_data, link_data, advers, pubs)
@@ -115,3 +115,6 @@ roc_auc = roc_auc_score(y_test, y_pred)
 print("ROC-AUC Score: ", roc_auc)
 
 # ROC-AUC Score: 0.9683730947010214
+
+
+#end#
